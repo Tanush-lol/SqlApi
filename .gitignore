@@ -1,0 +1,4 @@
+.exe
+.db_tool
+# Go binaries
+goSqlApi
