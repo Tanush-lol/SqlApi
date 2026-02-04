@@ -1,14 +1,15 @@
 package main
 
 import (
-	"bufio"
-	"database/sql"
-	"fmt"
-	"log"
-	"os"
-	"strings"
+	"bufio"        //red user input
+	"database/sql" //sql for golang but this does not support postgressql
+	"fmt"		 			 //c lang input and output functionalities
+	"log"		 			 //like js logging
+	"os"			 		//os interaction stdin/stdout
+	"strings"     //strings in golang
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" //for implementation of init of postgressql dbs, we can use basic functions FROM
+												//sql support for golang
 )
 
 type Employee struct {
@@ -16,7 +17,6 @@ type Employee struct {
 	Name     string
 	Email    string
 	Salary   int
-	HireDate string
 }
 
 func main() {
