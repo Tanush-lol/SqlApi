@@ -1,0 +1,3 @@
+yah so creating a CRUD operations on sql using golang
+displays every row with index in brackets like a 2d matrix
+

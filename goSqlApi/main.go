@@ -1,38 +1,37 @@
 package main
 
 import (
-	"bufio"        //red user input
-	"database/sql" //sql for golang but this does not support postgressql
-	"fmt"		 			 //c lang input and output functionalities
-	"log"		 			 //like js logging
-	"os"			 		//os interaction stdin/stdout
-	"strings"     //strings in golang
+	"bufio"
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
+	"strings"
 
-	_ "github.com/lib/pq" //for implementation of init of postgressql dbs, we can use basic functions FROM
-												//sql support for golang
+	_ "github.com/lib/pq"
 )
 
 type Employee struct {
-	ID       int
-	Name     string
-	Email    string
-	Salary   int
+	ID     int
+	Name   string
+	Email  string
+	Salary int
 }
 
 func main() {
 	// Get database credentials from user
-	reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin) //reads from input and stores it in var reader
 
 	fmt.Print("Enter database name: ")
 	dbname, _ := reader.ReadString('\n')
 	dbname = strings.TrimSpace(dbname)
 
 	fmt.Print("Enter username: ")
-	user, _ := reader.ReadString('\n')
+	user, _ := reader.ReadString('\n') //takes username for db
 	user = strings.TrimSpace(user)
 
 	fmt.Print("Enter password: ")
-	password, _ := reader.ReadString('\n')
+	password, _ := reader.ReadString('\n') //takes user password for db
 	password = strings.TrimSpace(password)
 
 	// Build connection string
@@ -40,7 +39,12 @@ func main() {
 		user, password, dbname)
 
 	// Connect to database
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", connStr)//connection to the db returns db or err so we write it like 
+																					//like this
+	//in pq library the init function demands an initial driver name which in case of postgres is postgres
+	//like while opening postgressql we write psql -U postgres this it the initial driver it demands to 
+	//open the psql entry point
+
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
@@ -54,7 +58,7 @@ func main() {
 	fmt.Println("Connected to database successfully!")
 
 	// Start transaction
-	tx, err := db.Begin()
+	tx, err := db.Begin() //opens up db for editing stuff
 	if err != nil {
 		log.Fatal("Failed to begin transaction:", err)
 	}
@@ -62,7 +66,7 @@ func main() {
 	// Operation 1: Query all employees ordered by name
 	fmt.Println("\n=== All Employees (Ordered by Name) ===")
 	rows1, err := tx.Query(`
-		SELECT id, name, email, salary, hire_date 
+		SELECT id, name, email, salary 
 		FROM employee 
 		ORDER BY name
 	`)
@@ -74,7 +78,7 @@ func main() {
 
 	for rows1.Next() {
 		var emp Employee
-		err := rows1.Scan(&emp.ID, &emp.Name, &emp.Email, &emp.Salary, &emp.HireDate)
+		err := rows1.Scan(&emp.ID, &emp.Name, &emp.Email, &emp.Salary)
 		if err != nil {
 			tx.Rollback()
 			log.Fatal("Failed to scan row:", err)
